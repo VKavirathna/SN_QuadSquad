@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class socialstickConfig(AppConfig):
+class SticksocialConfig(AppConfig):
     name = 'sticksocial'
