@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('landing1.urls')),
     path('accounts/', include('allauth.urls')),
+    path('sticksocial/', include('sticksocial.urls')),
 ]
