@@ -31,3 +31,12 @@ class PostListView(View):
         }
 
         return render(request, 'sticksocial/POST_LIST.html', context)
+
+class PostDetailView(View):
+    def get(self, request, pk, *args, **kwargs):
+        post=Post.objects.get(pk=pk)
+
+        context={
+            'post': post
+        }
+        return render(request, 'sticksocial/POST_DETAIL.html', context)
