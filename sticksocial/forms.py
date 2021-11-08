@@ -7,7 +7,7 @@ class PostForm(forms.ModelForm):
         label='',
         widget=forms.Textarea(attrs={
             'rows': '3',
-            'placeholder': 'Say Something'
+            'placeholder': 'Type Something..'
         }))
 
     class Meta:
