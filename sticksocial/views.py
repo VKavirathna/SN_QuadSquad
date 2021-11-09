@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from .models import Post, Comment
+from .models import Post, Comment, UserProfile
 from .forms import PostForm, CommentForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
@@ -105,3 +105,5 @@ class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+
+
