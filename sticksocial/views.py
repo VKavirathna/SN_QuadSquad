@@ -117,4 +117,4 @@ class ProfileView(View):
             'profile': profile,
             'posts': posts
         }
-        return render(request, 'sticksocial/PROFILE.html', context)
+        return render(request, 'sticksocial/profile.html', context)
