@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row mt-5">
         <div class="col-md-3 col-sm-6">
-            <a href="{% url 'POST_LIST' %}" class="btn btn-light">Back to Feed</a>
+            <a href="{% url 'POST_LIST' %}" class="btn btn-outline-primary">Back to Feed</a>
 
         </div>
     </div>
@@ -13,19 +13,35 @@
             <img src="{{ profile.picture.url}}" class="rounded-circle" width="100" height="100" />
             {% if profile.name %}
             <h3 class="py-4">{{ profile.name}}
-            {% endif %}</h3>
+                <span>
+                    {% if request.user == user %}
+                        <a href="{% url 'PROFILE_EDIT' profile.pk %}" style="color:#333"><i class="far fa-edit">
+                        </i></a>
+                    {% endif %}
+                </span>
+                {% else %}
+                <h3 class="py-4">{{ user.username }}
+                    <span>
+                        {% if request.user == user %}
+                            <a href="{% url 'PROFILE_EDIT' profile.pk %}" style="color:#333"><i class="far fa-edit">
+                            </i></a>
+                        {% endif %}
+                    </span>
+                </h3>
+                {% endif %}
+            </h3>
 
             {% if profile.location %}
-            <h3 class="py-4">{{ profile.location}}
-            {% endif %}</h3>
+            <p>{{ profile.location}}</p>
+            {% endif %}
 
             {% if profile.birth_date %}
-            <h3 class="py-4">{{ profile.birth_date}}
-            {% endif %}</h3>
+            <p>{{ profile.birth_date}}</p>
+            {% endif %}
 
             {% if profile.bio %}
-            <h3 class="py-4">{{ profile.bio}}
-            {% endif %}</h3>
+            <p>{{ profile.bio}}</p>
+            {% endif %}
 
         </div>
     </div>

@@ -118,3 +118,15 @@ class ProfileView(View):
             'posts': posts
         }
         return render(request, 'sticksocial/profile.html', context)
+
+class ProfileEditView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
+    model = UserProfile
+    fields =['name', 'bio','birth_date', 'location', 'picture']
+    template_name = 'sticksocial/PROFILE_EDIT.html'
+
+    def get_success_url(self):
+        pk=self.kwargs['pk']
+        return reverse_lazy('profile', kwargs={'pk':pk})
+    def test_func(self):
+        profile=self.get_object()
+        return self.request.user == profile.user
