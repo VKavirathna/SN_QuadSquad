@@ -130,3 +130,17 @@ class ProfileEditView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
     def test_func(self):
         profile=self.get_object()
         return self.request.user == profile.user
+    
+ class AddFollower(LoginRequiredMixin, View):
+     def post(self, request, pk, *args, **kwargs):
+         profile = UserProfile.objects.get(pk=pk)
+         profile.followers.add(request.user)
+
+         return redirect('profile', pk=profile.pk)
+
+ class RemoveFollower(LoginRequiredMixin, View):
+     def post(self, request, pk, *args, **kwargs):
+         profile = UserProfile.objects.get(pk=pk)
+         profile.followers.remove(request.user)
+
+         return redirect('profile', pk=profile.pk)
