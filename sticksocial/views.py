@@ -86,7 +86,7 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         pk = self.kwargs['post_pk']
-        return reverse_lazy('post-detail', kwargs={'pk': pk})
+        return reverse_lazy('POST_DETAIL', kwargs={'pk': pk})
 
     def test_func(self):
         comment = self.get_object()
