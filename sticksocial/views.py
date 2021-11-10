@@ -180,8 +180,8 @@ class AddLike(LoginRequiredMixin, View):
                 is_dislike = True
                 break
             
-            if is_dislike:
-                post.dislikes.remove(request.user)
+        if is_dislike:
+            post.dislikes.remove(request.user)
         
         is_like = False
         
@@ -190,14 +190,14 @@ class AddLike(LoginRequiredMixin, View):
                 is_like = True
                 break
             
-            if not is_like:
-                post.likes.add(request.user)
+        if not is_like:
+            post.likes.add(request.user)
             
-            if is_like:
-                post.likes.remove(request.user)
+        if is_like:
+            post.likes.remove(request.user)
             
-            next = request.POST.get('next', '/')
-            return HttpResponseRedirect(next)
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
             
 
 class AddDisLike(LoginRequiredMixin, View):
@@ -211,8 +211,8 @@ class AddDisLike(LoginRequiredMixin, View):
                 is_like = True
                 break
             
-            if is_like:
-                post.likes.remove(request.user)
+        if is_like:
+            post.likes.remove(request.user)
         
         is_dislike = False
         
@@ -221,11 +221,11 @@ class AddDisLike(LoginRequiredMixin, View):
                 is_dislike = True
                 break
             
-            if not is_dislike:
-                post.dislikes.add(request.user)
+        if not is_dislike:
+            post.dislikes.add(request.user)
             
-            if is_dislike:
-                post.dislikes.remove(request.user)
+        if is_dislike:
+            post.dislikes.remove(request.user)
                
         next = request.POST.get('next', '/')  
         return HttpResponseRedirect(next)
