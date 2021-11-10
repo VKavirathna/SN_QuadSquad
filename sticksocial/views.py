@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from .models import Post, Comment, UserProfile
 from .forms import PostForm, CommentForm
@@ -106,41 +106,63 @@ class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         post = self.get_object()
         return self.request.user == post.author
 
+
 class ProfileView(View):
     def get(self, request, pk, *args, **kwargs):
-        profile=UserProfile.objects.get(pk=pk)
-        user=profile.user
-        posts=Post.objects.filter(author=user).order_by('-created_on')
+        profile = UserProfile.objects.get(pk=pk)
+        user = profile.user
+        posts = Post.objects.filter(author=user).order_by('-created_on')
 
-        context={
+        followers = profile.followers.all()
+
+        if len(followers) == 0:
+            is_following = False
+
+        for follower in followers:
+            if follower == request.user:
+                is_following = True
+                break
+            else:
+                is_following = False
+
+        number_of_followers = len(followers)
+
+        context = {
             'user': user,
             'profile': profile,
-            'posts': posts
+            'posts': posts,
+            'number_of_followers': number_of_followers,
+            'is_following': is_following,
+
         }
         return render(request, 'sticksocial/profile.html', context)
 
-class ProfileEditView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
+
+class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = UserProfile
-    fields =['name', 'bio','birth_date', 'location', 'picture']
+    fields = ['name', 'bio', 'birth_date', 'location', 'picture']
     template_name = 'sticksocial/PROFILE_EDIT.html'
 
     def get_success_url(self):
-        pk=self.kwargs['pk']
-        return reverse_lazy('profile', kwargs={'pk':pk})
+        pk = self.kwargs['pk']
+        return reverse_lazy('profile', kwargs={'pk': pk})
+
     def test_func(self):
-        profile=self.get_object()
+        profile = self.get_object()
         return self.request.user == profile.user
-    
- class AddFollower(LoginRequiredMixin, View):
-     def post(self, request, pk, *args, **kwargs):
-         profile = UserProfile.objects.get(pk=pk)
-         profile.followers.add(request.user)
 
-         return redirect('profile', pk=profile.pk)
 
- class RemoveFollower(LoginRequiredMixin, View):
-     def post(self, request, pk, *args, **kwargs):
-         profile = UserProfile.objects.get(pk=pk)
-         profile.followers.remove(request.user)
+class AddFollower(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        profile = UserProfile.objects.get(pk=pk)
+        profile.followers.add(request.user)
 
-         return redirect('profile', pk=profile.pk)
+        return redirect('profile', pk=profile.pk)
+
+
+class RemoveFollower(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        profile = UserProfile.objects.get(pk=pk)
+        profile.followers.remove(request.user)
+
+        return redirect('profile', pk=profile.pk)
