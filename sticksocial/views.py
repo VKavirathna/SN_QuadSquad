@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from django.views import View
-from .models import Post, Comment, UserProfile
-from .forms import PostForm, CommentForm
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
+from django.views import View
+from .models import Post, Comment, UserProfile
+from .forms import PostForm, CommentForm
 from django.views.generic.edit import UpdateView, DeleteView
 
 
@@ -36,11 +36,11 @@ class PostListView(LoginRequiredMixin, View):
 
         return render(request, 'sticksocial/POST_LIST.html', context)
 
-
 class PostDetailView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         post = Post.objects.get(pk=pk)
         form = CommentForm()
+
         comments = Comment.objects.filter(post=post).order_by('-created_on')
 
         context = {
@@ -48,8 +48,8 @@ class PostDetailView(LoginRequiredMixin, View):
             'form': form,
             'comments': comments,
         }
-        return render(request, 'sticksocial/POST_DETAIL.html', context)
 
+        return render(request, 'sticksocial/POST_DETAIL.html', context)
     def post(self, request, pk, *args, **kwargs):
         post = Post.objects.get(pk=pk)
         form = CommentForm(request.POST)
@@ -70,30 +70,6 @@ class PostDetailView(LoginRequiredMixin, View):
 
         return render(request, 'sticksocial/POST_DETAIL.html', context)
 
-
-class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Post
-    template_name = 'sticksocial/POST_DELETE.html'
-    success_url = reverse_lazy('POST_LIST')
-
-    def test_func(self):
-        post = self.get_object()
-        return self.request.user == post.author
-
-
-class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Comment
-    template_name = 'sticksocial/COMMENT_DELETE.html'
-
-    def get_success_url(self):
-        pk = self.kwargs['post_pk']
-        return reverse_lazy('POST_DETAIL', kwargs={'pk': pk})
-
-    def test_func(self):
-        comment = self.get_object()
-        return self.request.user == comment.author
-
-
 class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     fields = ['body']
@@ -107,6 +83,26 @@ class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         post = self.get_object()
         return self.request.user == post.author
 
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    template_name = 'sticksocial/POST_DELETE.html'
+    success_url = reverse_lazy('POST_LIST')
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'sticksocial/COMMENT_DELETE.html'
+
+    def get_success_url(self):
+        pk = self.kwargs['post_pk']
+        return reverse_lazy('POST_DETAIL', kwargs={'pk': pk})
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
 
 class ProfileView(View):
     def get(self, request, pk, *args, **kwargs):
@@ -134,10 +130,9 @@ class ProfileView(View):
             'posts': posts,
             'number_of_followers': number_of_followers,
             'is_following': is_following,
-
         }
-        return render(request, 'sticksocial/profile.html', context)
 
+        return render(request, 'sticksocial/profile.html', context)
 
 class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = UserProfile
@@ -152,7 +147,6 @@ class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         profile = self.get_object()
         return self.request.user == profile.user
 
-
 class AddFollower(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         profile = UserProfile.objects.get(pk=pk)
@@ -160,73 +154,69 @@ class AddFollower(LoginRequiredMixin, View):
 
         return redirect('profile', pk=profile.pk)
 
-
 class RemoveFollower(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         profile = UserProfile.objects.get(pk=pk)
         profile.followers.remove(request.user)
 
         return redirect('profile', pk=profile.pk)
-    
-    
+
 class AddLike(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
-        post=Post.objects.get(pk=pk)
-        
-        is_dislike = False
-        
-        for dislike in post.dislikes.all():
-            if dislike == request.user:
-                is_dislike = True
-                break
-            
-            if is_dislike:
-                post.dislikes.remove(request.user)
-        
-        is_like = False
-        
-        for like in post.likes.all():
-            if like == request.user:
-                is_like = True
-                break
-            
-            if not is_like:
-                post.likes.add(request.user)
-            
-            if is_like:
-                post.likes.remove(request.user)
-            
-            next = request.POST.get('next', '/')
-            return HttpResponseRedirect(next)
-            
+        post = Post.objects.get(pk=pk)
 
-class AddDisLike(LoginRequiredMixin, View):
-    def post(self, request, pk, *args, **kwargs):
-        post=Post.objects.get(pk=pk)
-        
-        is_like = False
-        
-        for like in post.likes.all():
-            if like == request.user:
-                is_like = True
-                break
-            
-            if is_like:
-                post.likes.remove(request.user)
-        
         is_dislike = False
-        
+
         for dislike in post.dislikes.all():
             if dislike == request.user:
                 is_dislike = True
                 break
-            
-            if not is_dislike:
-                post.dislikes.add(request.user)
-            
-            if is_dislike:
-                post.dislikes.remove(request.user)
-               
-        next = request.POST.get('next', '/')  
+
+        if is_dislike:
+            post.dislikes.remove(request.user)
+
+        is_like = False
+
+        for like in post.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+
+        if not is_like:
+            post.likes.add(request.user)
+
+        if is_like:
+            post.likes.remove(request.user)
+
+        next = request.POST.get('next', '/')
         return HttpResponseRedirect(next)
 
+class AddDislike(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        post = Post.objects.get(pk=pk)
+
+        is_like = False
+
+        for like in post.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+
+        if is_like:
+            post.likes.remove(request.user)
+
+        is_dislike = False
+
+        for dislike in post.dislikes.all():
+            if dislike == request.user:
+                is_dislike = True
+                break
+
+        if not is_dislike:
+            post.dislikes.add(request.user)
+
+        if is_dislike:
+            post.dislikes.remove(request.user)
+
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
