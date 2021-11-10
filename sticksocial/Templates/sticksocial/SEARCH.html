@@ -14,7 +14,7 @@
             <div class="col-md-5 col-sm-12 border-bottom position-relative">
                 <p><a style="text-decoration: none;" class="text-primary" href="{% url 'profile' profile.pk%}">@{{ profile.user}}</a></p>
                 {% if profile.location %}
-                    <p>{{% profile.location %}}</p>
+                    <p>{{  profile.location }}</p>
                 {% endif %}
                 <p>Followers: {{ profile.followers.all.count }}</p>
             </div>
