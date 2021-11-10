@@ -233,7 +233,7 @@ class UserSearch(View):
             Q(user__username__icontains=query)
         )
         context={
-            'PROFILE_LIST': profile_list,
+            'profile_list': profile_list,
         }
 
         return render(request, 'sticksocial/SEARCH.html', context)

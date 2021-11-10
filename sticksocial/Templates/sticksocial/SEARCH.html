@@ -2,14 +2,13 @@
 
 {% block content %}
 <div class="container">
-
     <div class="row mt-5">
         <div class="col-md-5 col-sm-6">
             <a href = "{% url 'POST_LIST' %}" class="btn btn-outline-primary"> Back to Feed</a>
         </div>
     </div>
 
-    {% for profile in profile_list %}
+    {% for profile in PROFILE_LIST %}
         <div class="row justify-content-center mt-3">
             <div class="col-md-5 col-sm-12 border-bottom position-relative">
                 <div>
@@ -20,8 +19,7 @@
                         <a class="text-primary post-link" href="{% url 'profile' profile.pk %}">@{{ profile.user }}</a>
                     </p>
                 </div>
-<p><a class="text-primary post-link" href="{% url 'profile' profile.pk %}">@{{ profile.user }}</a></p>
-                <p><a style="text-decoration: none;" class="text-primary" href="{% url 'profile' profile.pk%}">@{{ profile.user}}</a></p>
+                <p><a class="text-primary post-link" href="{% url 'profile' profile.pk %}">@{{ profile.user }}</a></p>
                 {% if profile.location %}
                     <p>{{  profile.location }}</p>
                 {% endif %}
