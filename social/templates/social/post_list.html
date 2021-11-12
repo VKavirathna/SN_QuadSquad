@@ -57,14 +57,14 @@
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{{ request.path }}">
                         <button class="remove-default-btn" type="submit">
-                            <i class="far fa-thumbs-up"> <span>{{ post.likes.all.count}}</span></i>
+                            <i class="far fa-thumbs-up" style="color:#0d6efd"> <span>{{ post.likes.all.count}}</span></i>
                         </button>
                     </form>
                     <form method="POST" action="{% url 'dislike' post.pk %}">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{{ request.path }}">
                         <button class="remove-default-btn" type="submit">
-                            <i class="far fa-thumbs-down"> <span>{{ post.dislikes.all.count}}</span></i>
+                            <i class="far fa-thumbs-down" style="color:#0d6efd"> <span>{{ post.dislikes.all.count}}</span></i>
                         </button>
                     </form>
                 </div>
