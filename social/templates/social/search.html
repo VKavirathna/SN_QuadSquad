@@ -1,33 +1,43 @@
 {% extends 'landing/base.html' %}
 
 {% block content %}
-<div class="container">
-    <div class="row mt-5">
-        <div class="col-md-5 col-sm-6 ">
-            <a href="{% url 'post-list' %}" class="btn btn-primary"> Back to Feed</a>
+<header>
+    <style>
+      body {
+    background-image: url("https://st4.depositphotos.com/1035451/20334/v/1600/depositphotos_203346284-stock-illustration-social-media-vector-background-network.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    }
+    </style>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-5 col-sm-6 ">
+                <a href="{% url 'post-list' %}" class="btn btn-primary"> Back to Feed</a>
+            </div>
         </div>
-    </div>
 
-    {% for profile in profile_list%}
-        <div class="row justify-content-center mt-3 ">
-            <div class="col-md-5 col-sm-12 border-bottom position-relative">
-                <div>
-                <a href="{% url 'profile' profile.pk%}">
-                    <img class="rounded-circle post-img" height="30" width="30" src="{{ profile.picture.url}}"/>
-                </a>
-                <p class="post-text">
-                    <a  class="text-primary post-link" href="{% url 'profile' profile.pk %}">@{{ profile.user }}</a>
-                </p>
+        {% for profile in profile_list%}
+            <div class="row justify-content-center mt-3 ">
+                <div class="col-md-5 col-sm-12 border-bottom position-relative">
+                    <div>
+                    <a href="{% url 'profile' profile.pk%}">
+                        <img class="rounded-circle post-img" height="30" width="30" src="{{ profile.picture.url}}"/>
+                    </a>
+                    <p class="post-text">
+                        <a  class="text-primary post-link" href="{% url 'profile' profile.pk %}">@{{ profile.user }}</a>
+                    </p>
+                </div>
+                    <p><a class="text-primary post-link" href="{% url 'profile' profile.pk %}">
+                        @{{ profile.user }}
+                    </a></p>
+                    {% if profile.location %}
+                        <p>{{ profile.location }}</p>
+                    {% endif %}
+                    <p>Followers: {{ profile.followers.all.count }}</p>
+                </div>
             </div>
-                <p><a class="text-primary post-link" href="{% url 'profile' profile.pk %}">
-                    @{{ profile.user }}
-                </a></p>
-                {% if profile.location %}
-                    <p>{{ profile.location }}</p>
-                {% endif %}
-                <p>Followers: {{ profile.followers.all.count }}</p>
-            </div>
-        </div>
-    {% endfor %}
-</div>
+        {% endfor %}
+    </div>
+</header>
 {% endblock content %}
