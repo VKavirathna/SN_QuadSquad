@@ -2,30 +2,41 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="container">
-    <div class="row mt-5">
-        <div class="col-md-5 col-sm-6 ">
-            <a href="{% url 'post-detail' object.pk %}" class="btn btn-outline-primary"> Back to Post</a>
-        </div>
-    </div>
+<header>
+    <style>
+      body {
+    background-image: url("https://st4.depositphotos.com/1035451/20334/v/1600/depositphotos_203346284-stock-illustration-social-media-vector-background-network.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    }
+    </style>
 
-    <div class="row justify-content-center mt-3">
-        <div class="col-md-5 col-sm-12 border-bottom">
-            <h5>Update your post</h5>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-5 col-sm-6 ">
+                <a href="{% url 'post-detail' object.pk %}" class="btn btn-outline-primary"> Back to Post</a>
+            </div>
         </div>
-    </div>
 
-    <div class="row justify-content-center mt-3 mb-5">
-        <div class="col-md-5 col-sm-12 border-bottom">
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form | crispy }}
-                <div class="d-grid gap-2">
-                    <button class="btn btn-primary mt-3">Post</button>
-                </div>
-            </form>
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-5 col-sm-12 border-bottom">
+                <h5>Update your post</h5>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-3 mb-5">
+            <div class="col-md-5 col-sm-12 border-bottom">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary mt-3">Post</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+</header>
 {% endblock content %}
 
